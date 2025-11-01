@@ -3,10 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaExclamationCircle } from "react-icons/fa";
 import { motion } from "framer-motion";
+import axios from "axios";
 import 'react-toastify/dist/ReactToastify.css';
 import loginImage from "../assets/signup.png";
 
-const Login = () => {
+const LoginAdmin = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState({});
 
-  // Validate email format
+  // ✅ Email validation
   useEffect(() => {
     if (email === '') {
       setErrors(p => ({ ...p, email: null }));
@@ -29,7 +30,7 @@ const Login = () => {
     }
   }, [email]);
 
-  // Validate code presence
+  // ✅ Code validation
   useEffect(() => {
     if (code && errors.code === 'Verification code is required') {
       setErrors(p => ({ ...p, code: null }));
@@ -41,7 +42,7 @@ const Login = () => {
     }
   }, [code, errors.code]);
 
-  // Step 1: Send OTP (mock backend)
+  // ✅ Step 1: Send OTP using backend API
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (!email) {
@@ -51,16 +52,25 @@ const Login = () => {
     if (!isValid.email) return;
 
     try {
-      // Simulate API call
-      await new Promise(res => setTimeout(res, 1000));
-      toast.info("📩 Temporary: OTP sent to your email");
-      setStep(2);
+      const res = await axios.post(
+        "http://localhost:4000/api/auth/citizen/send-otp",
+        { email },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      if (res.data?.success) {
+        toast.success("📩 OTP sent successfully to your email");
+        setStep(2);
+      } else {
+        toast.error(res.data?.message || "Failed to send OTP");
+      }
     } catch (err) {
-      toast.error("Failed to send OTP. Please try again.");
+      console.error(err);
+      toast.error("Server error while sending OTP. Please try again.");
     }
   };
 
-  // Step 2: Verify OTP (mock backend)
+  // ✅ Step 2: Verify OTP using backend API
   const handleCodeSubmit = async (e) => {
     e.preventDefault();
     if (!code) {
@@ -69,16 +79,26 @@ const Login = () => {
     }
 
     try {
-      // Simulate OTP verification
-      await new Promise(res => setTimeout(res, 1000));
+      const res = await axios.post(
+        "http://localhost:4000/api/auth/citizen/verify-otp",
+        { email, otp: code },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      if (code === "123456") { // temporary mock OTP
+      if (res.data?.success) {
         toast.success("🎉 Login Successful");
-        setTimeout(() => navigate('/dashboard'), 1000);
+
+        // ✅ Store data in localStorage
+        localStorage.setItem("userEmail", res.data.email);
+        localStorage.setItem("userType", "admin");
+
+        // Redirect after delay
+        setTimeout(() => navigate('/dashboard-admin'), 1000);
       } else {
-        throw new Error("Invalid OTP");
+        toast.error(res.data?.message || "Invalid OTP, please try again.");
       }
     } catch (err) {
+      console.error(err);
       toast.error("❌ Invalid OTP, please try again.");
       setErrors(p => ({ ...p, code: "Verification code is incorrect" }));
     }
@@ -228,4 +248,6 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginAdmin;
+
+

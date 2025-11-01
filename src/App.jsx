@@ -12,7 +12,7 @@ import LoginAdmin from './components/LoginAdmin';
 import Signup from './components/Signup';
 import PrivateRoute from './components/PrivateRoute';
 import RequireAdmin from './components/auth/RequireAdmin';
-import AdminDashboard from './Pages/AdminDashboard';
+// import AdminDashboard from './Pages/AdminDashboard';
 import Error404 from './components/Error404';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -28,7 +28,7 @@ import ServerError from './components/ServerError';
 // import DownloadIOS from './Pages/DownloadIOS';
 import NewIssue from './Pages/NewIssue';
 import IssueDetail from './Pages/IssueDetail';
-import UserDashboard from './Pages/UserDashboard';
+// import UserDashboard from './Pages/UserDashboard';
 import CommunityVotingPage from './Pages/CommunityVotingPage';
 import VotingSystem from './Pages/VotingSystem';
 import Profile from './Pages/Profile';
@@ -69,6 +69,22 @@ import UserMap from './Pages/UserMap';
 
 
 
+
+
+// import Login from './components/Login';
+import UserOnboard from './components/user/UserOnboard';
+import UserDashboard from './components/user/UserDashBoard.jsx';
+import AdminOnboard from './components/admin/AdminOnboard';
+import AdminDashboard from './components/admin/AdminDashboard';
+
+
+
+
+
+
+
+
+
 const App = () => {
   const { isSignedIn } = useAuth();
   const location = useLocation();
@@ -92,7 +108,7 @@ const App = () => {
   return (
     <>
       <ScrollToTop />
-      <ScrollToTopOnRouteChange/>
+      <ScrollToTopOnRouteChange />
       <Toaster
         position="top-right"
         toastOptions={{
@@ -107,7 +123,7 @@ const App = () => {
           },
         }}
       />
-          
+
       {!isAdminRoute && <Navbar />}
 
       <main className="min-h-screen">
@@ -146,46 +162,65 @@ const App = () => {
             <Route path="/community-voting" element={<CommunityVotingPage />} />
             <Route path="/voting-system" element={<VotingSystem />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path='/electricity' element={<Electricity/>}/>
-            <Route path='/budget' element={<Budget/>}/>
-            <Route path='/train' element={<Train/>}/>
-            <Route path='/school' element={<School/>}/>
+            <Route path='/electricity' element={<Electricity />} />
+            <Route path='/budget' element={<Budget />} />
+            <Route path='/train' element={<Train />} />
+            <Route path='/school' element={<School />} />
 
-            <Route path='/user-map' element={<UserMap/>}/>
+            <Route path='/user-map' element={<UserMap />} />
             <Route
               path="/profile-setup"
               element={
                 <PrivateRoute allowedRoles={['user', 'admin']}>
-                  <ProfileSetup onComplete={() => setIsProfileComplete(true)}/>
+                  <ProfileSetup onComplete={() => setIsProfileComplete(true)} />
                 </PrivateRoute>
               }
             />
-            
+
+
+
+
+
+            {/* User Routes */}
+            <Route path="/user/onboard" element={<UserOnboard />} />
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+
+            {/* Admin Routes */}
+            <Route path="/admin/onboard" element={<AdminOnboard />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+
+
+
+
+
+
+
             <Route path="/resources" element={<Resources />} />
             <Route path="/complaints" element={<MyComplaints />} />
             {/* <Route path="/contributors" element={<Contributors />} /> */}
-            <Route path="/sos" element={<SOS/>}/>
-            <Route path='/chatroom' element={<Chatroom/>}/>
-            <Route path='/tax-impact' element={<TaxImpact/>}/>
+            <Route path="/sos" element={<SOS />} />
+            <Route path='/chatroom' element={<Chatroom />} />
+            <Route path='/tax-impact' element={<TaxImpact />} />
             <Route path="/medical-info" element={<MedicalInfo />} />
             <Route path="/safe-word" element={<SafeWord />} />
             <Route path="/record-audio" element={<RecordAudio />} />
-            <Route path='/repersentative-finder' element={<RepersentativeFinder/>}/>
-            <Route path='/admin/analytics' element={<Analytics/>}/>
-            <Route path='/admin/users' element={<Users/>}/>
-            <Route path='/admin/documents' element={<Documents/>}/>
-            <Route path='/admin/settings' element={<Settings/>}/>
-            <Route path='/admin/notifications' element={<Notification/>}/>
-            <Route path='/nearby-services' element={<NearbyServices/>}/>
-            <Route path='/lost-found' element={<LostAndFoundPage/>}/>
-            <Route path='/community-holidays' element={<CommunityHolidays/>}/>
-            <Route path='/transport' element={<Transport/>}/>
-            <Route path='/civic-stats' element={<CivicStatistics/>}/>
-            <Route path='/elections-info' element={<Election/>}/>
-            <Route path='/govt-schemes' element={<Schemes/>}/>
-            <Route path='/vehical' element={<Vehical/>}/>
-            <Route path='/sdrf' element={<SDRF/>}/>
-            <Route path='/airseva' element={<AirSeva/>}/>
+            <Route path='/repersentative-finder' element={<RepersentativeFinder />} />
+            <Route path='/admin/analytics' element={<Analytics />} />
+            <Route path='/admin/users' element={<Users />} />
+            <Route path='/admin/documents' element={<Documents />} />
+            <Route path='/admin/settings' element={<Settings />} />
+            <Route path='/admin/notifications' element={<Notification />} />
+            <Route path='/nearby-services' element={<NearbyServices />} />
+            <Route path='/lost-found' element={<LostAndFoundPage />} />
+            <Route path='/community-holidays' element={<CommunityHolidays />} />
+            <Route path='/transport' element={<Transport />} />
+            <Route path='/civic-stats' element={<CivicStatistics />} />
+            <Route path='/elections-info' element={<Election />} />
+            <Route path='/govt-schemes' element={<Schemes />} />
+            <Route path='/vehical' element={<Vehical />} />
+            <Route path='/sdrf' element={<SDRF />} />
+            <Route path='/airseva' element={<AirSeva />} />
             <Route
               path="/admin/dashboard"
               element={
@@ -204,7 +239,7 @@ const App = () => {
             />
             <Route
               path="/user/dashboard"
-              element={ renderDashboard()}
+              element={renderDashboard()}
             />
             {/* Errors */}
             <Route path="/500" element={<ServerError />} />
